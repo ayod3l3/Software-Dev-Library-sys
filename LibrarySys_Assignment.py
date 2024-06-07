@@ -160,10 +160,12 @@ class User:
         else:
             raise ValueError("Invalid date of birth format")
 
-#Define methods for validating email and date formats
+# Define methods for validating email and date formats
     def is_valid_email(self, email):
-        #Email validation, checks for "@" and "." in user email
-        if "@" in email and "." in email:
+        # Regex for validation of email
+        regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        # If email passes validation pattern
+        if re.match(regex, email):
             return True
         else:
             return False
@@ -183,9 +185,10 @@ class UserList:
     def store_user(self, user):
         self.collection[user.get_username()] = user
         
-#define method to reomve user by using firstname and indicate multiple users with same firstname 
+#define method to remove user by using firstname and indicate multiple users with same firstname 
     def remove_user_by_first_name(self, first_name):
-        usernames_to_remove = [username for username, user in self.collection.items() if user.get_firstname() == first_name]
+        usernames_to_remove = [username for username,\
+        user in self.collection.items() if user.get_firstname() == first_name]
 
         if len(usernames_to_remove) == 0:
             print(f"No users found with the first name {first_name}")
@@ -225,7 +228,7 @@ class Loan:
         self.loans[book] = user
         book.available_copies -= 1
         
-##Define method to retrn books by user and un-assign borrowed book from user
+# Define method to return books by user and un-assign borrowed book from user
     def return_book(self, book):
         if book in self.loans:
             del self.loans[book]
@@ -252,7 +255,7 @@ class Loan:
             first_name = user.get_firstname()
             print(f"Overdue Book: {book.get_title()} (Username: {username}, First Name: {first_name})")
 
-# Create Library System imstance
+# Create Library System instance
 class LibrarySystem:
     def __init__(self):
         self.book_list = BookList()
@@ -303,7 +306,7 @@ class LibrarySystem:
         else:
             print("No matching books found.")
         
-#Extention to program to modify Books and Users details.  
+# Extension to program to modify Books and Users details.  
     def modify_book_details(self, book_title):
         book = self.book_list.search_book("title", book_title) #Search book to be modified by title
         if book:
@@ -320,11 +323,11 @@ class LibrarySystem:
             book.set_publisher(new_publisher)
             book.set_total_copies(new_copies)
         else:
-            print("Book not found in the collection") #should the title not be found
+            print("Book not found in the collection") #if the title is not found
 
     def modify_user_details(self, username):
         try:
-            user = self.user_list.get_user_details(username) #Serach user by username
+            user = self.user_list.get_user_details(username) # Search user by username
             if user:
                 new_first_name = input("Enter new first name: ")
                 new_surname = input("Enter new surname: ")
@@ -338,16 +341,16 @@ class LibrarySystem:
                 user.street_name = new_street_name
                 user.postcode = new_postcode
             else:
-                print("User not found in the collection") #Should the user name no exist or is writen incorrectly
+                print("User not found in the collection") # If the user name does not exist or is spelt incorrectly
 
         except ValueError as e:
             print(f"Error: {e}")
 
-#Initialize libry system
+#Initialize library system
 library = LibrarySystem()
 
 #Add fictitious books details
-book1 = Book()
+book1 = Book() 
 book1.set_title("How to Win Everyday")
 book1.set_author("Thomas Crown")
 book1.set_year("1988")
